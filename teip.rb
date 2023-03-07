@@ -2,18 +2,16 @@ class Teip < Formula
   version "2.2.0"
   desc "Masking tape to help commands \"do one thing well\""
   homepage "https://github.com/greymd/teip"
+  url "https://github.com/greymd/teip/archive/v2.2.0.tar.gz"
+  sha256 "11816abcecaebc8aa1dc8131387baa4030ba7e9f48994733c091b04a2c992381"
+  license "MIT"
+  head "https://github.com/greymd/teip.git", branch: "main"
 
-  # 64-bit ARM version for Apple Silicon
-  if Hardware::CPU.arm?
-    url "https://github.com/greymd/teip/releases/download/v#{version}/teip-#{version}.aarch64-apple-darwin.tar.gz"
-    sha256 "e403b493daf6a97a2ef91df444ba4a292f96f1d4764c3e667e6710c4fbeb321c"
-  else
-    url "https://github.com/greymd/teip/releases/download/v#{version}/teip-#{version}.x86_64-apple-darwin.tar.gz"
-    sha256 "ef041adf0699cd4ba05b4ba76de2ea94847fbd8c12f9b83142ae904f8f551a81"
-  end
+  depends_on "rust" => :build
 
   def install
-    bin.install "bin/teip"
+    ENV["SHELL_COMPLETIONS_DIR"] = buildpath
+    system "cargo", "install", "--features", "oniguruma", *std_cargo_args
     man1.install "man/teip.1"
     zsh_completion.install "completion/zsh/_teip"
     fish_completion.install "completion/fish/teip.fish"
@@ -21,8 +19,8 @@ class Teip < Formula
   end
 
   test do
-    assert_match /BBA\nBBB/, pipe_output("#{bin}/teip -c 1-2 -- tr A B", "AAA\nBBB", 0)
-
+    ENV["TEIP_HIGHLIGHT"] = "<{}>"
+    assert_match /AAA/, pipe_output("#{bin}/teip -c 1", "<A>AA", 0)
     # Invalid option
     pipe_output("#{bin}/teip -c 2-1", "test", 1)
   end
