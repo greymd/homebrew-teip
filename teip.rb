@@ -1,5 +1,4 @@
 class Teip < Formula
-  version "2.2.0"
   desc "Masking tape to help commands \"do one thing well\""
   homepage "https://github.com/greymd/teip"
   url "https://github.com/greymd/teip/archive/v2.2.0.tar.gz"
