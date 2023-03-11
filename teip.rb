@@ -1,14 +1,15 @@
 class Teip < Formula
   desc 'Masking tape to help commands "do one thing well"'
-  homepage "https://github.com/greymd/teip-test"
-  url "https://github.com/greymd/teip-test/archive/v2.3.2.tar.gz"
-  sha256 "493c220d662463e9f5e1bc93be38c26f097b70d44d0f8e0e8f8e939758dee399"
+  homepage "https://github.com/greymd/teip"
+  url "https://github.com/greymd/teip/archive/v2.3.0.tar.gz"
+  sha256 "4c39466613f39d27fa22ae2a6309ac732ea94fdbc8711ecd4149fc1ecdfbaedf"
   license "MIT"
   head "https://github.com/greymd/teip.git", branch: "main"
 
   depends_on "pkg-config" => :build
   depends_on "rust" => :build
-  depends_on "oniguruma" => :build
+  depends_on "oniguruma"
+  uses_from_macos "llvm" # for libclang
 
   def install
     ENV["RUSTONIG_DYNAMIC_LIBONIG"] = "1"
